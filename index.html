@@ -4,8 +4,84 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>실시간 채팅</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <style>
-      /* CSS는 변경 사항이 없습니다 */
+      /* CSS Variables from components.css */
+      :root {
+        --primary-gradient: linear-gradient(135deg, #2b5876, #4e4376);
+        --primary-dark: #2b5876;
+        --primary-light: #4e4376;
+        --primary-alpha: rgba(43, 88, 118, 0.1);
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --glass-blur: blur(20px);
+        --text-light: #ffffff;
+        --text-dark: #2c3e50;
+        --text-muted: #666;
+        --text-primary: #2b5876;
+        --bg-light: #f8f9fa;
+        --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        --white: #ffffff;
+        --shadow-light: rgba(0, 0, 0, 0.1);
+        --shadow-medium: rgba(0, 0, 0, 0.15);
+        --shadow-heavy: rgba(0, 0, 0, 0.25);
+        --shadow-primary: 0 4px 15px rgba(43, 88, 118, 0.2);
+        --border-radius: 16px;
+        --border-radius-lg: 20px;
+        --border-radius-xl: 24px;
+        --transition: all 0.3s ease;
+        --transition-fast: all 0.2s ease;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes messageSlideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes modalSlide {
+        from {
+          opacity: 0;
+          transform: translateY(-50px) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes shimmer {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -13,146 +89,337 @@
       }
 
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-family: "Poppins", sans-serif;
+        background: var(--bg-gradient);
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px 0;
+        padding: 20px;
+        line-height: 1.6;
+        color: var(--text-dark);
       }
 
+      /* 데스크탑과 모바일 반응형 컨테이너 */
       .app-container {
         width: 100%;
-        max-width: 400px;
-        height: 600px;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        background: var(--white);
+        border-radius: var(--border-radius-xl);
+        box-shadow: 0 25px 60px var(--shadow-heavy);
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        border: 1px solid var(--glass-border);
+        backdrop-filter: var(--glass-blur);
+        position: relative;
+        animation: modalSlide 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      /* 데스크탑용 레이아웃 */
+      @media (min-width: 769px) {
+        .app-container {
+          max-width: 1200px;
+          height: 80vh;
+          min-height: 600px;
+        }
+
+        .lobby-screen {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 30px;
+          padding: 40px;
+          overflow-y: auto;
+        }
+
+        .lobby-left {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .lobby-right {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .room-list {
+          max-height: none;
+          flex-grow: 1;
+          overflow-y: auto;
+          min-height: 400px;
+        }
+      }
+
+      /* 모바일용 레이아웃 */
+      @media (max-width: 768px) {
+        .app-container {
+          max-width: 450px;
+          height: 700px;
+        }
+
+        .lobby-screen {
+          padding: 30px;
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+        }
+
+        .room-list {
+          max-height: 350px;
+          overflow-y: auto;
+          margin-top: 20px;
+        }
+      }
+
+      .app-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--primary-gradient);
       }
 
       .login-screen {
-        padding: 40px 30px;
+        padding: 60px 40px;
         text-align: center;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        background: linear-gradient(
+          135deg,
+          rgba(43, 88, 118, 0.03),
+          rgba(78, 67, 118, 0.02)
+        );
+        position: relative;
+        overflow: hidden;
+      }
+
+      .login-screen::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232b5876' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='25'/%3E%3Ccircle cx='30' cy='30' r='15'/%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
       }
 
       .login-screen h1 {
-        color: #333;
-        margin-bottom: 30px;
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin-bottom: 2rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 2;
+        animation: fadeInUp 0.8s ease-out;
       }
 
       .lobby-screen {
-        padding: 20px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
+        background: var(--bg-light);
+        position: relative;
+      }
+
+      .lobby-screen::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232b5876' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='25'/%3E%3Ccircle cx='30' cy='30' r='15'/%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.3;
       }
 
       .lobby-header {
         text-align: center;
-        margin-bottom: 20px;
-        padding: 0 10px;
+        margin-bottom: 30px;
+        padding: 25px 20px;
+        background: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 20px var(--shadow-light);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        position: relative;
+        z-index: 2;
+      }
+
+      /* 데스크탑에서 로비 헤더를 그리드에 맞게 조정 */
+      @media (min-width: 769px) {
+        .lobby-header {
+          grid-column: 1 / -1;
+          margin-bottom: 0;
+        }
+      }
+
+      .lobby-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--primary-gradient);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
       }
 
       .lobby-header h2 {
-        font-size: 22px;
-        font-weight: 600;
-        margin-bottom: 8px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
         word-break: break-all;
       }
+
       .lobby-header p {
-        font-size: 14px;
-        color: #666;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 500;
       }
 
       .input-group {
         margin-bottom: 20px;
         text-align: left;
+        position: relative;
+        z-index: 2;
       }
 
       .input-group label {
         display: block;
         margin-bottom: 8px;
-        color: #666;
+        color: var(--text-primary);
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
       }
 
       .input-group input {
         width: 100%;
         padding: 12px 16px;
-        border: 2px solid #e1e5e9;
-        border-radius: 12px;
-        font-size: 16px;
-        transition: border-color 0.3s;
+        border: 1px solid rgba(43, 88, 118, 0.1);
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: var(--transition);
+        background: var(--bg-light);
+        color: var(--text-dark);
+        font-family: "Poppins", sans-serif;
       }
 
       .input-group input:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: var(--primary-dark);
+        box-shadow: 0 0 0 3px var(--primary-alpha);
+        background: var(--white);
+        transform: translateY(-1px);
+      }
+
+      .input-group input::placeholder {
+        color: var(--text-muted);
+        opacity: 0.7;
       }
 
       .btn {
         width: 100%;
-        padding: 14px;
+        padding: 14px 20px;
         border: none;
-        border-radius: 12px;
-        font-size: 16px;
+        border-radius: 25px;
+        font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.3s;
+        transition: var(--transition);
         margin-bottom: 12px;
+        position: relative;
+        overflow: hidden;
+        font-family: "Poppins", sans-serif;
+        will-change: transform;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .btn:hover::before {
+        left: 100%;
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: var(--primary-gradient);
+        color: var(--text-light);
+        box-shadow: var(--shadow-primary);
       }
 
       .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(43, 88, 118, 0.4);
       }
 
       .btn-secondary {
-        background: #f8f9fa;
-        color: #666;
-        border: 2px solid #e1e5e9;
+        background: var(--white);
+        color: var(--text-primary);
+        border: 2px solid var(--primary-dark);
+        box-shadow: 0 2px 8px var(--shadow-light);
       }
 
       .btn-secondary:hover {
-        background: #e9ecef;
+        background: var(--primary-gradient);
+        color: var(--text-light);
+        border-color: transparent;
+        transform: translateY(-3px) scale(1.02);
       }
 
       .divider {
         display: flex;
         align-items: center;
-        margin: 20px 0;
-        color: #999;
+        margin: 25px 0;
+        color: var(--text-muted);
         font-size: 14px;
+        font-weight: 500;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* 데스크탑에서는 divider 숨기기 */
+      @media (min-width: 769px) {
+        .divider {
+          display: none;
+        }
       }
 
       .divider::before,
       .divider::after {
         content: "";
         flex: 1;
-        height: 1px;
-        background: #e1e5e9;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--primary-alpha),
+          transparent
+        );
       }
 
       .divider span {
-        padding: 0 16px;
+        padding: 0 20px;
+        background: var(--white);
+        border-radius: 15px;
+        font-weight: 600;
       }
 
       .chat-screen {
@@ -162,50 +429,92 @@
       }
 
       .chat-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 20px;
+        background: var(--primary-gradient);
+        color: var(--text-light);
+        padding: 25px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .chat-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20L0 0v40l20-20zM40 0v40L20 20l20-20z'/%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.3;
+      }
+
+      .room-info {
+        position: relative;
+        z-index: 2;
       }
 
       .room-info h2 {
-        font-size: 18px;
-        font-weight: 600;
+        font-size: 1.3rem;
+        font-weight: 700;
         margin-bottom: 4px;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
 
       .room-info p {
-        font-size: 14px;
-        opacity: 0.8;
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 500;
       }
 
       .leave-btn {
-        background: rgba(255, 255, 255, 0.2);
-        border: none;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: var(--text-light);
+        padding: 10px 18px;
+        border-radius: 20px;
         cursor: pointer;
-        font-size: 14px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+        position: relative;
+        z-index: 2;
       }
 
       .leave-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
       }
 
       .messages-container {
         flex-grow: 1;
         padding: 20px;
         overflow-y: auto;
-        background: #f8f9fa;
+        background: var(--bg-light);
+        position: relative;
+      }
+
+      .messages-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232b5876' fill-opacity='0.015'%3E%3Ccircle cx='30' cy='30' r='25'/%3E%3Ccircle cx='30' cy='30' r='15'/%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
       }
 
       .message {
-        margin-bottom: 16px;
         display: flex;
         flex-direction: column;
+        margin-bottom: 16px;
+        animation: messageSlideIn 0.3s ease-out;
+        position: relative;
+        z-index: 2;
       }
 
       .message.own {
@@ -214,156 +523,499 @@
 
       .message-info {
         font-size: 12px;
-        color: #999;
-        margin-bottom: 4px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        font-weight: 500;
       }
 
       .message-bubble {
-        max-width: 80%;
-        padding: 12px 16px;
-        border-radius: 18px;
+        max-width: 85%;
+        padding: 14px 18px;
+        border-radius: 20px;
         word-wrap: break-word;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px var(--shadow-light);
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+      }
+
+      .message-bubble:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px var(--shadow-medium);
       }
 
       .message.own .message-bubble {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-bottom-right-radius: 6px;
+        background: var(--primary-gradient);
+        color: var(--text-light);
+        border-bottom-right-radius: 8px;
+        box-shadow: var(--shadow-primary);
       }
 
       .message:not(.own) .message-bubble {
-        background: white;
-        color: #333;
-        border: 1px solid #e1e5e9;
-        border-bottom-left-radius: 6px;
+        background: var(--white);
+        color: var(--text-dark);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        border-bottom-left-radius: 8px;
       }
 
       .message-input-container {
-        padding: 20px;
-        background: white;
-        border-top: 1px solid #e1e5e9;
+        padding: 25px;
+        background: var(--white);
+        border-top: 1px solid rgba(43, 88, 118, 0.08);
         display: flex;
-        gap: 12px;
+        gap: 15px;
         align-items: flex-end;
+        position: relative;
+      }
+
+      .message-input-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary-gradient);
+        opacity: 0.3;
       }
 
       .message-input {
         flex-grow: 1;
-        border: 2px solid #e1e5e9;
-        border-radius: 20px;
-        padding: 12px 16px;
-        font-size: 16px;
+        border: 1px solid rgba(43, 88, 118, 0.1);
+        border-radius: 25px;
+        padding: 12px 18px;
+        font-size: 1rem;
         resize: none;
         min-height: 44px;
         max-height: 120px;
+        background: var(--bg-light);
+        color: var(--text-dark);
+        font-family: "Poppins", sans-serif;
+        transition: var(--transition);
       }
 
       .message-input:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: var(--primary-dark);
+        background: var(--white);
+        box-shadow: 0 0 0 3px var(--primary-alpha);
+        transform: scale(1.02);
+      }
+
+      .message-input::placeholder {
+        color: var(--text-muted);
+        opacity: 0.7;
       }
 
       .send-btn {
-        width: 44px;
-        height: 44px;
+        width: 50px;
+        height: 50px;
         border: none;
         border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: var(--primary-gradient);
+        color: var(--text-light);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: transform 0.2s;
+        transition: var(--transition);
+        box-shadow: var(--shadow-primary);
       }
 
       .send-btn:hover {
-        transform: scale(1.05);
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 6px 20px rgba(43, 88, 118, 0.3);
       }
 
       .send-btn:disabled {
-        opacity: 0.5;
+        opacity: 0.6;
         cursor: not-allowed;
         transform: none;
-      }
-
-      .room-list {
-        max-height: 200px;
-        overflow-y: auto;
-        margin-top: 20px;
+        background: linear-gradient(135deg, #dee2e6, #e9ecef);
+        color: #6c757d;
       }
 
       .room-item {
-        padding: 12px 16px;
-        background: #f8f9fa;
-        border: 1px solid #e1e5e9;
-        border-radius: 12px;
-        margin-bottom: 8px;
+        padding: 18px 20px;
+        background: var(--white);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        border-radius: var(--border-radius);
+        margin-bottom: 12px;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: var(--transition);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px var(--shadow-light);
+        backdrop-filter: blur(10px);
+      }
+
+      .room-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(43, 88, 118, 0.05),
+          transparent
+        );
+        transition: left 0.3s ease;
+      }
+
+      .room-item:hover::before {
+        left: 100%;
       }
 
       .room-item:hover {
-        background: #e9ecef;
-        transform: translateY(-1px);
+        background: linear-gradient(
+          135deg,
+          rgba(43, 88, 118, 0.03),
+          rgba(78, 67, 118, 0.02)
+        );
+        transform: translateY(-2px) scale(1.01);
+        border-color: rgba(43, 88, 118, 0.15);
+        box-shadow: 0 6px 20px rgba(43, 88, 118, 0.08);
       }
 
       .room-item .room-name {
         font-weight: 600;
-        color: #333;
+        color: var(--text-dark);
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
 
       .room-item .room-users {
         font-size: 12px;
-        color: #666;
+        color: var(--text-muted);
+        font-weight: 500;
       }
 
       .password-protected {
         color: #ffa500;
+        font-size: 1rem;
       }
 
       .hidden {
         display: none !important;
       }
 
-      .error {
-        background: #fee;
-        color: #c33;
-        padding: 12px;
-        border-radius: 8px;
-        margin-top: 10px;
+      .error,
+      .success {
+        padding: 12px 16px;
+        border-radius: var(--border-radius);
+        margin-top: 15px;
         font-size: 14px;
+        font-weight: 500;
+        backdrop-filter: blur(10px);
+        border: 1px solid;
+        position: relative;
+        z-index: 2;
+      }
+
+      .error {
+        background: rgba(220, 53, 69, 0.1);
+        color: #721c24;
+        border-color: rgba(220, 53, 69, 0.2);
       }
 
       .success {
-        background: #efe;
-        color: #393;
-        padding: 12px;
-        border-radius: 8px;
-        margin-top: 10px;
-        font-size: 14px;
+        background: rgba(40, 167, 69, 0.1);
+        color: #155724;
+        border-color: rgba(40, 167, 69, 0.2);
       }
 
+      .create-room-form {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        position: relative;
+        z-index: 2;
+      }
+
+      /* 데스크탑에서 방 생성 폼 마진 제거 */
+      @media (min-width: 769px) {
+        .create-room-form {
+          margin-bottom: 0;
+          height: fit-content;
+        }
+      }
+
+      .create-room-form::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--primary-gradient);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      /* 방 목록 섹션 헤더 */
+      .room-list-header {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        position: relative;
+        z-index: 2;
+        text-align: center;
+      }
+
+      .room-list-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(135deg, #4e4376, #2b5876);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      .room-list-header h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .room-list-header p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      /* 모바일에서는 방 목록 헤더 숨기기 */
+      @media (max-width: 768px) {
+        .room-list-header {
+          display: none;
+        }
+      }
+
+      .password-form {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        margin-top: 20px;
+        box-shadow: 0 8px 30px var(--shadow-medium);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        position: relative;
+        z-index: 3;
+        animation: fadeInUp 0.4s ease-out;
+      }
+
+      /* 데스크탑에서 비밀번호 폼 위치 조정 */
+      @media (min-width: 769px) {
+        .password-form {
+          margin-top: 0;
+          grid-column: 1 / -1;
+        }
+      }
+
+      .password-form::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(135deg, #ffc107, #ff8c00);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      .empty-room-list {
+        text-align: center;
+        color: var(--text-muted);
+        padding: 40px 20px;
+        background: var(--white);
+        border-radius: var(--border-radius);
+        border: 2px dashed rgba(43, 88, 118, 0.15);
+        position: relative;
+        z-index: 2;
+      }
+
+      .empty-room-list i {
+        font-size: 3rem;
+        color: var(--primary-dark);
+        opacity: 0.3;
+        margin-bottom: 1rem;
+      }
+
+      .empty-room-list p {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      /* Scrollbar Styling */
       .messages-container::-webkit-scrollbar,
       .room-list::-webkit-scrollbar,
       .lobby-screen::-webkit-scrollbar {
-        width: 4px;
+        width: 6px;
       }
 
       .messages-container::-webkit-scrollbar-track,
       .room-list::-webkit-scrollbar-track,
       .lobby-screen::-webkit-scrollbar-track {
-        background: transparent;
+        background: var(--bg-light);
       }
 
       .messages-container::-webkit-scrollbar-thumb,
       .room-list::-webkit-scrollbar-thumb,
       .lobby-screen::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 2px;
+        background: var(--primary-gradient);
+        border-radius: 3px;
+      }
+
+      .messages-container::-webkit-scrollbar-thumb:hover,
+      .room-list::-webkit-scrollbar-thumb:hover,
+      .lobby-screen::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #4e4376, #2b5876);
+      }
+
+      /* App Icon */
+      .app-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+
+      .app-icon i {
+        font-size: 2rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* 작은 모바일 화면 최적화 */
+      @media (max-width: 500px) {
+        .app-container {
+          max-width: 95%;
+          height: 90vh;
+          margin: 20px auto;
+        }
+
+        .login-screen {
+          padding: 40px 25px;
+        }
+
+        .lobby-screen {
+          padding: 20px;
+        }
+
+        .lobby-header {
+          padding: 20px 15px;
+        }
+
+        .create-room-form,
+        .password-form {
+          padding: 20px;
+        }
+
+        .chat-header {
+          padding: 20px;
+        }
+
+        .message-input-container {
+          padding: 20px;
+        }
+
+        .btn {
+          padding: 12px 18px;
+          font-size: 0.95rem;
+        }
+
+        .room-list {
+          max-height: 250px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .app-container {
+          height: 95vh;
+        }
+
+        .login-screen h1 {
+          font-size: 2rem;
+        }
+
+        .room-info h2 {
+          font-size: 1.1rem;
+        }
+
+        .message-bubble {
+          max-width: 90%;
+        }
+      }
+
+      /* 대형 데스크탑 화면 최적화 */
+      @media (min-width: 1400px) {
+        .app-container {
+          max-width: 1400px;
+          height: 85vh;
+        }
+
+        .lobby-screen {
+          grid-gap: 50px;
+          padding: 50px;
+        }
+
+        .lobby-header h2 {
+          font-size: 1.8rem;
+        }
+
+        .lobby-header p {
+          font-size: 1rem;
+        }
+      }
+
+      /* Animation for room creation */
+      .room-creating {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .room-creating::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(43, 88, 118, 0.1),
+          transparent
+        );
+        animation: shimmer 1.5s infinite;
+      }
+
+      /* Focus states */
+      .btn:focus-visible {
+        outline: 2px solid var(--primary-dark);
+        outline-offset: 2px;
+      }
+
+      .input-group input:focus-visible {
+        outline: 2px solid var(--primary-dark);
+        outline-offset: 2px;
       }
     </style>
   </head>
@@ -371,7 +1023,10 @@
     <div class="app-container">
       <!-- 닉네임 입력 화면 -->
       <div id="loginScreen" class="login-screen">
-        <h1>💬 실시간 채팅</h1>
+        <div class="app-icon">
+          <i class="fas fa-comments"></i>
+        </div>
+        <h1>실시간 채팅</h1>
         <div class="input-group">
           <label for="username">닉네임</label>
           <input
@@ -382,7 +1037,7 @@
           />
         </div>
         <button class="btn btn-primary" onclick="enterLobby()">
-          로비 입장
+          <i class="fas fa-sign-in-alt"></i> 로비 입장
         </button>
         <div id="loginStatus"></div>
       </div>
@@ -395,7 +1050,7 @@
         </div>
 
         <!-- 방 생성 -->
-        <div id="createRoomForm" style="margin-bottom: 20px">
+        <div id="createRoomForm" class="create-room-form">
           <div class="input-group">
             <label for="roomName">방 이름</label>
             <input
@@ -414,7 +1069,7 @@
             />
           </div>
           <button class="btn btn-primary" onclick="createRoom()">
-            새 방 만들기
+            <i class="fas fa-plus-circle"></i> 새 방 만들기
           </button>
         </div>
 
@@ -428,9 +1083,11 @@
         </div>
 
         <!-- 비밀번호 입력 -->
-        <div id="passwordForm" class="hidden" style="margin-top: 20px">
+        <div id="passwordForm" class="password-form hidden">
           <div class="input-group">
-            <label for="joinPassword">비밀번호</label>
+            <label for="joinPassword">
+              <i class="fas fa-lock"></i> 비밀번호
+            </label>
             <input
               type="password"
               id="joinPassword"
@@ -438,10 +1095,10 @@
             />
           </div>
           <button class="btn btn-primary" onclick="joinWithPassword()">
-            입장
+            <i class="fas fa-sign-in-alt"></i> 입장
           </button>
           <button class="btn btn-secondary" onclick="hidePasswordForm()">
-            취소
+            <i class="fas fa-times"></i> 취소
           </button>
         </div>
         <div id="lobbyStatus"></div>
@@ -454,7 +1111,9 @@
             <h2 id="currentRoomName">방 이름</h2>
             <p id="onlineUsers">접속자: 1명</p>
           </div>
-          <button class="leave-btn" onclick="leaveRoom()">나가기</button>
+          <button class="leave-btn" onclick="leaveRoom()">
+            <i class="fas fa-sign-out-alt"></i> 나가기
+          </button>
         </div>
 
         <div class="messages-container" id="messagesContainer">
@@ -471,9 +1130,7 @@
             oninput="autoResize(this)"
           ></textarea>
           <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M2 21l21-9L2 3v7l15 2-15 2v7z" />
-            </svg>
+            <i class="fas fa-paper-plane"></i>
           </button>
         </div>
       </div>
@@ -630,14 +1287,17 @@
             roomDiv.innerHTML = `
                 <div>
                     <div class="room-name">
+                        <i class="fas fa-comments"></i>
                         ${escapeHtml(room.name)} 
                         ${
                           room.password
-                            ? '<span class="password-protected">🔒</span>'
+                            ? '<i class="fas fa-lock password-protected"></i>'
                             : ""
                         }
                     </div>
-                    <div class="room-users">${userCount}명 참여중</div>
+                    <div class="room-users">
+                        <i class="fas fa-users"></i> ${userCount}명 참여중
+                    </div>
                 </div>
             `;
 
@@ -648,8 +1308,12 @@
             Object.keys(rooms).length === 0 ||
             roomList.children.length === 0
           ) {
-            roomList.innerHTML =
-              '<p style="text-align: center; color: #999; padding: 20px;">아직 생성된 방이 없습니다. 새 방을 만들어보세요!</p>';
+            roomList.innerHTML = `
+              <div class="empty-room-list">
+                <i class="fas fa-comments"></i>
+                <p>아직 생성된 방이 없습니다.<br>새 방을 만들어보세요!</p>
+              </div>
+            `;
           }
         });
       }
@@ -673,6 +1337,13 @@
           showMessage("방 이름은 2-30글자로 입력해주세요.", "error", "lobby");
           return;
         }
+
+        const createBtn = document.querySelector(
+          "#createRoomForm .btn-primary"
+        );
+        createBtn.classList.add("room-creating");
+        createBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> 방 생성 중...';
 
         try {
           const roomsRef = ref(database, "rooms");
@@ -703,6 +1374,10 @@
             "error",
             "lobby"
           );
+        } finally {
+          createBtn.classList.remove("room-creating");
+          createBtn.innerHTML =
+            '<i class="fas fa-plus-circle"></i> 새 방 만들기';
         }
       };
 
@@ -771,6 +1446,11 @@
         loadRoomInfo();
         loadMessages();
         loadUsers();
+
+        // 입력 필드 초기화
+        document.getElementById("roomName").value = "";
+        document.getElementById("roomPassword").value = "";
+        document.getElementById("joinPassword").value = "";
       }
 
       // 방 정보 로드
@@ -834,6 +1514,7 @@
 
           messageDiv.innerHTML = `
               <div class="message-info">
+                  <i class="fas fa-user"></i>
                   ${
                     message.userId === currentUser.id
                       ? "나"
@@ -862,6 +1543,10 @@
         const message = input.value.trim();
         if (!message) return;
 
+        const sendBtn = document.getElementById("sendBtn");
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
         try {
           const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
           await push(messagesRef, {
@@ -874,6 +1559,9 @@
           autoResize(input);
         } catch (error) {
           console.error("메시지 전송 오류:", error);
+        } finally {
+          sendBtn.disabled = false;
+          sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
         }
       };
 
