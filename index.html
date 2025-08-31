@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+  <!-- HEAD 및 STYLE 부분은 이전과 동일하므로 생략 -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,7 +14,7 @@
       rel="stylesheet"
     />
     <style>
-      /* CSS Variables from components.css */
+      /* CSS는 이전 답변과 동일합니다. */
       :root {
         --primary-gradient: linear-gradient(135deg, #2b5876, #4e4376);
         --primary-dark: #2b5876;
@@ -38,6 +39,16 @@
         --border-radius-xl: 24px;
         --transition: all 0.3s ease;
         --transition-fast: all 0.2s ease;
+
+        /* 사용자별 색상 팔레트 */
+        --user-color-1: linear-gradient(135deg, #667eea, #764ba2);
+        --user-color-2: linear-gradient(135deg, #f093fb, #f5576c);
+        --user-color-3: linear-gradient(135deg, #4facfe, #00f2fe);
+        --user-color-4: linear-gradient(135deg, #43e97b, #38f9d7);
+        --user-color-5: linear-gradient(135deg, #fa709a, #fee140);
+        --user-color-6: linear-gradient(135deg, #a8edea, #fed6e3);
+        --user-color-7: linear-gradient(135deg, #ff9a9e, #fecfef);
+        --user-color-8: linear-gradient(135deg, #a18cd1, #fbc2eb);
       }
 
       @keyframes fadeInUp {
@@ -55,6 +66,21 @@
         from {
           opacity: 0;
           transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .message.own {
+        animation: messageSlideInOwn 0.3s ease-out;
+      }
+
+      @keyframes messageSlideInOwn {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
         }
         to {
           opacity: 1;
@@ -82,6 +108,30 @@
         }
       }
 
+      /* 새 메시지 알림 애니메이션 */
+      @keyframes newMessagePulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 4px 15px var(--shadow-medium);
+        }
+        50% {
+          transform: scale(1.02);
+          box-shadow: 0 8px 25px var(--shadow-heavy);
+        }
+      }
+
+      /* 새 메시지 하이라이트 */
+      .new-message-highlight {
+        animation: newMessagePulse 1.2s ease-in-out;
+        border-left: 4px solid var(--primary-dark);
+      }
+
+      .message.own.new-message-highlight {
+        border-left: none;
+        border-right: 4px solid var(--primary-light);
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -100,7 +150,7 @@
         color: var(--text-dark);
       }
 
-      /* 데스크탑과 모바일 반응형 컨테이너 */
+      /* 데스크톱과 모바일 반응형 컨테이너 */
       .app-container {
         width: 100%;
         background: var(--white);
@@ -115,7 +165,7 @@
         animation: modalSlide 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
       }
 
-      /* 데스크탑용 레이아웃 */
+      /* 데스크톱용 레이아웃 */
       @media (min-width: 769px) {
         .app-container {
           max-width: 1200px;
@@ -153,7 +203,7 @@
       @media (max-width: 768px) {
         .app-container {
           max-width: 450px;
-          height: 700px;
+          height: 90vh;
         }
 
         .lobby-screen {
@@ -249,8 +299,8 @@
         position: relative;
         z-index: 2;
       }
-
-      /* 데스크탑에서 로비 헤더를 그리드에 맞게 조정 */
+      
+      /* 데스크톱에서 로비 헤더를 그리드에 맞게 조정 */
       @media (min-width: 769px) {
         .lobby-header {
           grid-column: 1 / -1;
@@ -282,7 +332,81 @@
         color: var(--text-muted);
         font-weight: 500;
       }
+      
+      .create-room-form {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        position: relative;
+        z-index: 2;
+      }
 
+      /* 데스크톱에서 방 생성 폼 마진 제거 */
+      @media (min-width: 769px) {
+        .create-room-form {
+          margin-bottom: 0;
+          height: fit-content;
+        }
+      }
+
+      .create-room-form::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--primary-gradient);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      /* 방 목록 섹션 헤더 */
+      .room-list-header {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 20px var(--shadow-light);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        position: relative;
+        z-index: 2;
+        text-align: center;
+      }
+
+      .room-list-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(135deg, #4e4376, #2b5876);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      .room-list-header h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      .room-list-header p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      /* 모바일에서는 방 목록 헤더 숨기기 */
+      @media (max-width: 768px) {
+        .room-list-header {
+          display: none;
+        }
+      }
+      
       .input-group {
         margin-bottom: 20px;
         text-align: left;
@@ -322,7 +446,7 @@
         color: var(--text-muted);
         opacity: 0.7;
       }
-
+      
       .btn {
         width: 100%;
         padding: 14px 20px;
@@ -395,7 +519,7 @@
         z-index: 2;
       }
 
-      /* 데스크탑에서는 divider 숨기기 */
+      /* 데스크톱에서는 divider 숨기기 */
       @media (min-width: 769px) {
         .divider {
           display: none;
@@ -417,223 +541,9 @@
 
       .divider span {
         padding: 0 20px;
-        background: var(--white);
+        background: var(--bg-light);
         border-radius: 15px;
         font-weight: 600;
-      }
-
-      .chat-screen {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .chat-header {
-        background: var(--primary-gradient);
-        color: var(--text-light);
-        padding: 25px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .chat-header::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20L0 0v40l20-20zM40 0v40L20 20l20-20z'/%3E%3C/g%3E%3C/svg%3E");
-        opacity: 0.3;
-      }
-
-      .room-info {
-        position: relative;
-        z-index: 2;
-      }
-
-      .room-info h2 {
-        font-size: 1.3rem;
-        font-weight: 700;
-        margin-bottom: 4px;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      .room-info p {
-        font-size: 0.9rem;
-        opacity: 0.9;
-        font-weight: 500;
-      }
-
-      .leave-btn {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: var(--text-light);
-        padding: 10px 18px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: 600;
-        transition: var(--transition);
-        backdrop-filter: blur(10px);
-        position: relative;
-        z-index: 2;
-      }
-
-      .leave-btn:hover {
-        background: rgba(255, 255, 255, 0.25);
-        transform: translateY(-2px) scale(1.05);
-        box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
-      }
-
-      .messages-container {
-        flex-grow: 1;
-        padding: 20px;
-        overflow-y: auto;
-        background: var(--bg-light);
-        position: relative;
-      }
-
-      .messages-container::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232b5876' fill-opacity='0.015'%3E%3Ccircle cx='30' cy='30' r='25'/%3E%3Ccircle cx='30' cy='30' r='15'/%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        opacity: 0.5;
-      }
-
-      .message {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 16px;
-        animation: messageSlideIn 0.3s ease-out;
-        position: relative;
-        z-index: 2;
-      }
-
-      .message.own {
-        align-items: flex-end;
-      }
-
-      .message-info {
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-bottom: 6px;
-        font-weight: 500;
-      }
-
-      .message-bubble {
-        max-width: 85%;
-        padding: 14px 18px;
-        border-radius: 20px;
-        word-wrap: break-word;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 2px 8px var(--shadow-light);
-        transition: var(--transition);
-        backdrop-filter: blur(10px);
-      }
-
-      .message-bubble:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 15px var(--shadow-medium);
-      }
-
-      .message.own .message-bubble {
-        background: var(--primary-gradient);
-        color: var(--text-light);
-        border-bottom-right-radius: 8px;
-        box-shadow: var(--shadow-primary);
-      }
-
-      .message:not(.own) .message-bubble {
-        background: var(--white);
-        color: var(--text-dark);
-        border: 1px solid rgba(43, 88, 118, 0.08);
-        border-bottom-left-radius: 8px;
-      }
-
-      .message-input-container {
-        padding: 25px;
-        background: var(--white);
-        border-top: 1px solid rgba(43, 88, 118, 0.08);
-        display: flex;
-        gap: 15px;
-        align-items: flex-end;
-        position: relative;
-      }
-
-      .message-input-container::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: var(--primary-gradient);
-        opacity: 0.3;
-      }
-
-      .message-input {
-        flex-grow: 1;
-        border: 1px solid rgba(43, 88, 118, 0.1);
-        border-radius: 25px;
-        padding: 12px 18px;
-        font-size: 1rem;
-        resize: none;
-        min-height: 44px;
-        max-height: 120px;
-        background: var(--bg-light);
-        color: var(--text-dark);
-        font-family: "Poppins", sans-serif;
-        transition: var(--transition);
-      }
-
-      .message-input:focus {
-        outline: none;
-        border-color: var(--primary-dark);
-        background: var(--white);
-        box-shadow: 0 0 0 3px var(--primary-alpha);
-        transform: scale(1.02);
-      }
-
-      .message-input::placeholder {
-        color: var(--text-muted);
-        opacity: 0.7;
-      }
-
-      .send-btn {
-        width: 50px;
-        height: 50px;
-        border: none;
-        border-radius: 50%;
-        background: var(--primary-gradient);
-        color: var(--text-light);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: var(--transition);
-        box-shadow: var(--shadow-primary);
-      }
-
-      .send-btn:hover {
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 6px 20px rgba(43, 88, 118, 0.3);
-      }
-
-      .send-btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-        background: linear-gradient(135deg, #dee2e6, #e9ecef);
-        color: #6c757d;
       }
 
       .room-item {
@@ -652,7 +562,7 @@
         box-shadow: 0 2px 8px var(--shadow-light);
         backdrop-filter: blur(10px);
       }
-
+      
       .room-item::before {
         content: "";
         position: absolute;
@@ -704,10 +614,435 @@
         font-size: 1rem;
       }
 
+      .password-form {
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        margin-top: 20px;
+        box-shadow: 0 8px 30px var(--shadow-medium);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        position: relative;
+        z-index: 3;
+        animation: fadeInUp 0.4s ease-out;
+      }
+
+      /* 데스크톱에서 비밀번호 폼 위치 조정 */
+      @media (min-width: 769px) {
+        .password-form {
+          margin-top: 0;
+          grid-column: 1 / -1;
+        }
+      }
+
+      .password-form::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(135deg, #ffc107, #ff8c00);
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      .empty-room-list {
+        text-align: center;
+        color: var(--text-muted);
+        padding: 40px 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: var(--border-radius);
+        border: 2px dashed rgba(43, 88, 118, 0.15);
+        position: relative;
+        z-index: 2;
+      }
+
+      .empty-room-list i {
+        font-size: 3rem;
+        color: var(--primary-dark);
+        opacity: 0.3;
+        margin-bottom: 1rem;
+      }
+
+      .empty-room-list p {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      
+      .chat-screen {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .chat-header {
+        background: var(--primary-gradient);
+        color: var(--text-light);
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .chat-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20L0 0v40l20-20zM40 0v40L20 20l20-20z'/%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.3;
+      }
+      
+      .room-info {
+        position: relative;
+        z-index: 2;
+        flex-grow: 1;
+      }
+
+      .room-info h2 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .room-info p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .online-users-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .user-tag {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: var(--text-light);
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: var(--transition);
+      }
+
+      .user-tag:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+      }
+
+      .user-tag.current-user {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        font-weight: 600;
+      }
+
+      .user-tag i {
+        font-size: 0.7rem;
+      }
+      
+      .leave-btn {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: var(--text-light);
+        padding: 10px 18px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+        position: relative;
+        z-index: 2;
+      }
+
+      .leave-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+      }
+      
+      .messages-container {
+        flex-grow: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: var(--bg-light);
+        position: relative;
+      }
+
+      .messages-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232b5876' fill-opacity='0.015'%3E%3Ccircle cx='30' cy='30' r='25'/%3E%3Ccircle cx='30' cy='30' r='15'/%3E%3Ccircle cx='30' cy='30' r='5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+      }
+      
+      .message {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 16px;
+        animation: messageSlideIn 0.3s ease-out;
+        position: relative;
+        z-index: 2;
+      }
+
+      .message.own {
+        align-items: flex-end;
+      }
+
+      .message-info {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        font-weight: 500;
+        padding: 0 10px;
+      }
+      
+      .message-bubble {
+        max-width: 85%;
+        padding: 14px 18px;
+        border-radius: 20px;
+        word-wrap: break-word;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px var(--shadow-light);
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+      }
+
+      .message-bubble:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px var(--shadow-medium);
+      }
+
+      .message.own .message-bubble {
+        background: var(--primary-gradient);
+        color: var(--text-light);
+        border-bottom-right-radius: 8px;
+        box-shadow: var(--shadow-primary);
+      }
+
+      .message:not(.own) .message-bubble {
+        background: var(--white);
+        color: var(--text-dark);
+        border: 1px solid rgba(43, 88, 118, 0.08);
+        border-bottom-left-radius: 8px;
+      }
+
+      /* 사용자별 색상 클래스 */
+      .message:not(.own) .message-bubble.user-color-1 {
+        background: var(--user-color-1);
+        color: white;
+        border: none;
+      }
+      .message:not(.own) .message-bubble.user-color-2 {
+        background: var(--user-color-2);
+        color: white;
+        border: none;
+      }
+      .message:not(.own) .message-bubble.user-color-3 {
+        background: var(--user-color-3);
+        color: white;
+        border: none;
+      }
+      .message:not(.own) .message-bubble.user-color-4 {
+        background: var(--user-color-4);
+        color: white;
+        border: none;
+      }
+      .message:not(.own) .message-bubble.user-color-5 {
+        background: var(--user-color-5);
+        color: white;
+        border: none;
+      }
+      .message:not(.own) .message-bubble.user-color-6 {
+        background: var(--user-color-6);
+        color: var(--text-dark);
+        border: none;
+      }
+      .message:not(.own) .message-bubble.user-color-7 {
+        background: var(--user-color-7);
+        color: var(--text-dark);
+        border: none;
+      }
+      .message:not(.own) .message-bubble.user-color-8 {
+        background: var(--user-color-8);
+        color: var(--text-dark);
+        border: none;
+      }
+
+      .message-input-container {
+        padding: 25px;
+        background: var(--white);
+        border-top: 1px solid rgba(43, 88, 118, 0.08);
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+        position: relative;
+      }
+
+      .message-input-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary-gradient);
+        opacity: 0.3;
+      }
+
+      .message-input {
+        flex-grow: 1;
+        border: 1px solid rgba(43, 88, 118, 0.1);
+        border-radius: 25px;
+        padding: 12px 18px;
+        font-size: 1rem;
+        resize: none;
+        min-height: 48px;
+        max-height: 120px;
+        background: var(--bg-light);
+        color: var(--text-dark);
+        font-family: "Poppins", sans-serif;
+        transition: var(--transition);
+      }
+
+      .message-input:focus {
+        outline: none;
+        border-color: var(--primary-dark);
+        background: var(--white);
+        box-shadow: 0 0 0 3px var(--primary-alpha);
+        transform: scale(1.02);
+      }
+
+      .message-input::placeholder {
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      .send-btn {
+        width: 50px;
+        height: 50px;
+        border: none;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        color: var(--text-light);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+        box-shadow: var(--shadow-primary);
+        flex-shrink: 0;
+      }
+
+      .send-btn:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 6px 20px rgba(43, 88, 118, 0.3);
+      }
+
+      .send-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        background: linear-gradient(135deg, #dee2e6, #e9ecef);
+        color: #6c757d;
+        box-shadow: none;
+      }
+
+      .send-btn i {
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .send-btn:disabled i {
+        transform: none;
+      }
+
+      /* Scrollbar Styling */
+      .messages-container::-webkit-scrollbar,
+      .room-list::-webkit-scrollbar,
+      .lobby-screen::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .messages-container::-webkit-scrollbar-track,
+      .room-list::-webkit-scrollbar-track,
+      .lobby-screen::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
+      }
+
+      .messages-container::-webkit-scrollbar-thumb,
+      .room-list::-webkit-scrollbar-thumb,
+      .lobby-screen::-webkit-scrollbar-thumb {
+        background: var(--primary-dark);
+        border-radius: 4px;
+      }
+
+      .messages-container::-webkit-scrollbar-thumb:hover,
+      .room-list::-webkit-scrollbar-thumb:hover,
+      .lobby-screen::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-light);
+      }
+
+      /* App Icon */
+      .app-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+
+      .app-icon i {
+        font-size: 2rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Animation for room creation */
+      .room-creating {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .room-creating::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        animation: shimmer 1.5s infinite;
+      }
+      
       .hidden {
         display: none !important;
       }
-
+      
       .error,
       .success {
         padding: 12px 16px;
@@ -732,291 +1067,6 @@
         color: #155724;
         border-color: rgba(40, 167, 69, 0.2);
       }
-
-      .create-room-form {
-        background: var(--white);
-        border-radius: var(--border-radius);
-        padding: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 20px var(--shadow-light);
-        border: 1px solid rgba(43, 88, 118, 0.08);
-        position: relative;
-        z-index: 2;
-      }
-
-      /* 데스크탑에서 방 생성 폼 마진 제거 */
-      @media (min-width: 769px) {
-        .create-room-form {
-          margin-bottom: 0;
-          height: fit-content;
-        }
-      }
-
-      .create-room-form::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: var(--primary-gradient);
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
-      }
-
-      /* 방 목록 섹션 헤더 */
-      .room-list-header {
-        background: var(--white);
-        border-radius: var(--border-radius);
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 20px var(--shadow-light);
-        border: 1px solid rgba(43, 88, 118, 0.08);
-        position: relative;
-        z-index: 2;
-        text-align: center;
-      }
-
-      .room-list-header::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(135deg, #4e4376, #2b5876);
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
-      }
-
-      .room-list-header h3 {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--primary-dark);
-        margin-bottom: 0.5rem;
-      }
-
-      .room-list-header p {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        font-weight: 500;
-      }
-
-      /* 모바일에서는 방 목록 헤더 숨기기 */
-      @media (max-width: 768px) {
-        .room-list-header {
-          display: none;
-        }
-      }
-
-      .password-form {
-        background: var(--white);
-        border-radius: var(--border-radius);
-        padding: 25px;
-        margin-top: 20px;
-        box-shadow: 0 8px 30px var(--shadow-medium);
-        border: 1px solid rgba(43, 88, 118, 0.08);
-        position: relative;
-        z-index: 3;
-        animation: fadeInUp 0.4s ease-out;
-      }
-
-      /* 데스크탑에서 비밀번호 폼 위치 조정 */
-      @media (min-width: 769px) {
-        .password-form {
-          margin-top: 0;
-          grid-column: 1 / -1;
-        }
-      }
-
-      .password-form::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(135deg, #ffc107, #ff8c00);
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
-      }
-
-      .empty-room-list {
-        text-align: center;
-        color: var(--text-muted);
-        padding: 40px 20px;
-        background: var(--white);
-        border-radius: var(--border-radius);
-        border: 2px dashed rgba(43, 88, 118, 0.15);
-        position: relative;
-        z-index: 2;
-      }
-
-      .empty-room-list i {
-        font-size: 3rem;
-        color: var(--primary-dark);
-        opacity: 0.3;
-        margin-bottom: 1rem;
-      }
-
-      .empty-room-list p {
-        font-size: 1rem;
-        font-weight: 500;
-      }
-
-      /* Scrollbar Styling */
-      .messages-container::-webkit-scrollbar,
-      .room-list::-webkit-scrollbar,
-      .lobby-screen::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .messages-container::-webkit-scrollbar-track,
-      .room-list::-webkit-scrollbar-track,
-      .lobby-screen::-webkit-scrollbar-track {
-        background: var(--bg-light);
-      }
-
-      .messages-container::-webkit-scrollbar-thumb,
-      .room-list::-webkit-scrollbar-thumb,
-      .lobby-screen::-webkit-scrollbar-thumb {
-        background: var(--primary-gradient);
-        border-radius: 3px;
-      }
-
-      .messages-container::-webkit-scrollbar-thumb:hover,
-      .room-list::-webkit-scrollbar-thumb:hover,
-      .lobby-screen::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #4e4376, #2b5876);
-      }
-
-      /* App Icon */
-      .app-icon {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 1rem;
-      }
-
-      .app-icon i {
-        font-size: 2rem;
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-
-      /* 작은 모바일 화면 최적화 */
-      @media (max-width: 500px) {
-        .app-container {
-          max-width: 95%;
-          height: 90vh;
-          margin: 20px auto;
-        }
-
-        .login-screen {
-          padding: 40px 25px;
-        }
-
-        .lobby-screen {
-          padding: 20px;
-        }
-
-        .lobby-header {
-          padding: 20px 15px;
-        }
-
-        .create-room-form,
-        .password-form {
-          padding: 20px;
-        }
-
-        .chat-header {
-          padding: 20px;
-        }
-
-        .message-input-container {
-          padding: 20px;
-        }
-
-        .btn {
-          padding: 12px 18px;
-          font-size: 0.95rem;
-        }
-
-        .room-list {
-          max-height: 250px;
-        }
-      }
-
-      @media (max-width: 380px) {
-        .app-container {
-          height: 95vh;
-        }
-
-        .login-screen h1 {
-          font-size: 2rem;
-        }
-
-        .room-info h2 {
-          font-size: 1.1rem;
-        }
-
-        .message-bubble {
-          max-width: 90%;
-        }
-      }
-
-      /* 대형 데스크탑 화면 최적화 */
-      @media (min-width: 1400px) {
-        .app-container {
-          max-width: 1400px;
-          height: 85vh;
-        }
-
-        .lobby-screen {
-          grid-gap: 50px;
-          padding: 50px;
-        }
-
-        .lobby-header h2 {
-          font-size: 1.8rem;
-        }
-
-        .lobby-header p {
-          font-size: 1rem;
-        }
-      }
-
-      /* Animation for room creation */
-      .room-creating {
-        position: relative;
-        overflow: hidden;
-      }
-
-      .room-creating::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(43, 88, 118, 0.1),
-          transparent
-        );
-        animation: shimmer 1.5s infinite;
-      }
-
-      /* Focus states */
-      .btn:focus-visible {
-        outline: 2px solid var(--primary-dark);
-        outline-offset: 2px;
-      }
-
-      .input-group input:focus-visible {
-        outline: 2px solid var(--primary-dark);
-        outline-offset: 2px;
-      }
     </style>
   </head>
   <body>
@@ -1032,11 +1082,12 @@
           <input
             type="text"
             id="username"
-            placeholder="닉네임을 입력하세요"
+            placeholder="2~20자 닉네임을 입력하세요"
             maxlength="20"
           />
         </div>
-        <button class="btn btn-primary" onclick="enterLobby()">
+        <!-- ★ 변경점: onclick 제거, id 추가 -->
+        <button id="enterLobbyBtn" class="btn btn-primary">
           <i class="fas fa-sign-in-alt"></i> 로비 입장
         </button>
         <div id="loginStatus"></div>
@@ -1056,7 +1107,7 @@
             <input
               type="text"
               id="roomName"
-              placeholder="방 이름을 입력하세요"
+              placeholder="2~30자 방 이름을 입력하세요"
               maxlength="30"
             />
           </div>
@@ -1068,18 +1119,24 @@
               placeholder="비밀번호를 입력하세요 (선택사항)"
             />
           </div>
-          <button class="btn btn-primary" onclick="createRoom()">
+          <button id="createRoomBtn" class="btn btn-primary">
             <i class="fas fa-plus-circle"></i> 새 방 만들기
           </button>
         </div>
 
         <div class="divider">
-          <span>기존 방 참여</span>
+          <span>또는 기존 방 참여</span>
         </div>
 
-        <!-- 방 목록 -->
-        <div class="room-list" id="roomList">
-          <!-- 방 목록이 여기에 표시됩니다 -->
+        <div class="room-list-container">
+          <div class="room-list-header">
+            <h3>참여 가능한 방</h3>
+            <p>목록에서 방을 선택하여 바로 참여하세요.</p>
+          </div>
+          <!-- 방 목록 -->
+          <div class="room-list" id="roomList">
+            <!-- 방 목록이 여기에 표시됩니다 -->
+          </div>
         </div>
 
         <!-- 비밀번호 입력 -->
@@ -1094,10 +1151,10 @@
               placeholder="방 비밀번호를 입력하세요"
             />
           </div>
-          <button class="btn btn-primary" onclick="joinWithPassword()">
+          <button id="joinWithPasswordBtn" class="btn btn-primary">
             <i class="fas fa-sign-in-alt"></i> 입장
           </button>
-          <button class="btn btn-secondary" onclick="hidePasswordForm()">
+          <button id="cancelJoinBtn" class="btn btn-secondary">
             <i class="fas fa-times"></i> 취소
           </button>
         </div>
@@ -1110,8 +1167,11 @@
           <div class="room-info">
             <h2 id="currentRoomName">방 이름</h2>
             <p id="onlineUsers">접속자: 1명</p>
+            <div class="online-users-list" id="onlineUsersList">
+              <!-- 온라인 사용자 목록이 여기에 표시됩니다 -->
+            </div>
           </div>
-          <button class="leave-btn" onclick="leaveRoom()">
+          <button id="leaveRoomBtn" class="leave-btn">
             <i class="fas fa-sign-out-alt"></i> 나가기
           </button>
         </div>
@@ -1148,13 +1208,13 @@
         set,
         remove,
         serverTimestamp,
-        off,
+        onDisconnect,
       } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
       // ======================================================================
       // ※ 중요 ※
-      // 아래 firebaseConfig 객체를 본인의 Firebase 프로젝트 설정 값으로 교체하세요.
-      // 이전에 사용한 API 키는 이미 외부에 노출되었으므로, 반드시 새로 발급받아 사용하세요!
+      // 아래 firebaseConfig 객체를 본인의 Firebase 프로젝트 설정 값으로 정확하게 교체해야 합니다!
+      // 이 값이 없거나 틀리면 앱 전체가 동작하지 않습니다.
       // ======================================================================
       const firebaseConfig = {
         apiKey: "AIzaSyDpiOVkUB9buK6xsgK8DqDXP_sIZnl9bIk",
@@ -1169,8 +1229,15 @@
       };
 
       // Firebase 초기화
-      const app = initializeApp(firebaseConfig);
-      const database = getDatabase(app);
+      let app, database;
+      try {
+        app = initializeApp(firebaseConfig);
+        database = getDatabase(app);
+        console.log("Firebase가 성공적으로 초기화되었습니다.");
+      } catch (error) {
+        console.error("Firebase 초기화 실패:", error);
+        alert("Firebase 설정에 문제가 있습니다. 콘솔(F12)을 확인해주세요.");
+      }
 
       // --- 이하 자바스크립트 코드 ---
 
@@ -1178,11 +1245,45 @@
       let currentUser = null;
       let currentRoom = null;
       let selectedRoomId = null;
+      let userColorMap = {};
+      let lastMessageCount = 0;
+      let isWindowFocused = true;
+      const originalTitle = "Anesthesia Work Chat";
+      let titleFlashInterval = null;
 
       let roomInfoListener = null;
       let messagesListener = null;
       let roomsListener = null;
       let usersListener = null;
+
+      // =================================================
+      // ★★★★★ 주요 함수 및 이벤트 리스너 정의 ★★★★★
+      // =================================================
+
+      const enterLobby = () => {
+        console.log("'로비 입장' 버튼 클릭됨!"); // 디버깅용 로그
+        const usernameInput = document.getElementById("username");
+        const username = usernameInput.value.trim();
+
+        if (!validateUsername(username)) {
+          showMessage("닉네임은 2-20글자로 입력해주세요.", "error", "login");
+          return;
+        }
+
+        currentUser = {
+          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          name: username,
+        };
+
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("lobbyScreen").classList.remove("hidden");
+        document.getElementById("welcomeMessage").textContent = `${escapeHtml(
+          currentUser.name
+        )}님, 환영합니다!`;
+
+        loadRooms();
+        requestNotificationPermission();
+      };
 
       // 사용자명 검증
       function validateUsername(username) {
@@ -1207,52 +1308,44 @@
         const statusDiv = document.getElementById(
           location === "login" ? "loginStatus" : "lobbyStatus"
         );
+        if (!statusDiv) return;
+
         statusDiv.innerHTML = `<div class="${type}">${message}</div>`;
         setTimeout(() => {
           statusDiv.innerHTML = "";
         }, 3000);
       }
 
-      // 로비 입장
-      window.enterLobby = function () {
-        const username = document.getElementById("username").value.trim();
-        if (!validateUsername(username)) {
-          showMessage("닉네임은 2-20글자로 입력해주세요.", "error", "login");
-          return;
+      // 알림 권한 요청
+      function requestNotificationPermission() {
+        if ("Notification" in window && Notification.permission === "default") {
+          Notification.requestPermission();
         }
-
-        currentUser = {
-          name: username,
-          id: Date.now().toString(),
-        };
-
-        document.getElementById("loginScreen").classList.add("hidden");
-        document.getElementById("lobbyScreen").classList.remove("hidden");
-        document.getElementById(
-          "welcomeMessage"
-        ).textContent = `${username}님, 환영합니다!`;
-        loadRooms();
-      };
+      }
 
       // 비밀번호 폼 표시/숨기기
       function showPasswordForm() {
         document.getElementById("passwordForm").classList.remove("hidden");
         document.getElementById("createRoomForm").classList.add("hidden");
         document.querySelector(".divider").classList.add("hidden");
-        document.getElementById("roomList").classList.add("hidden");
+        document
+          .getElementById("roomList")
+          .parentElement.classList.add("hidden");
       }
 
-      window.hidePasswordForm = function () {
+      const hidePasswordForm = () => {
         document.getElementById("passwordForm").classList.add("hidden");
         document.getElementById("createRoomForm").classList.remove("hidden");
         document.querySelector(".divider").classList.remove("hidden");
-        document.getElementById("roomList").classList.remove("hidden");
+        document
+          .getElementById("roomList")
+          .parentElement.classList.remove("hidden");
 
         document.getElementById("joinPassword").value = "";
         selectedRoomId = null;
       };
 
-      // 방 목록 로드 (0명인 방 자동 삭제 기능 추가)
+      // 방 목록 로드
       function loadRooms() {
         if (roomsListener) roomsListener();
 
@@ -1264,8 +1357,6 @@
 
           Object.keys(rooms).forEach((roomId) => {
             const room = rooms[roomId];
-
-            // 24시간 지난 방 삭제
             const oneDay = 24 * 60 * 60 * 1000;
             if (Date.now() - room.created > oneDay) {
               remove(ref(database, `rooms/${roomId}`));
@@ -1274,10 +1365,9 @@
 
             const userCount = room.users ? Object.keys(room.users).length : 0;
 
-            // ★ 변경점: 0명인 방은 데이터베이스에서 삭제하고 목록에 표시하지 않음
-            if (userCount === 0) {
+            if (userCount === 0 && Date.now() - room.created > 60000) {
               remove(ref(database, `rooms/${roomId}`));
-              return; // 다음 방으로 넘어감
+              return;
             }
 
             const roomDiv = document.createElement("div");
@@ -1300,14 +1390,10 @@
                     </div>
                 </div>
             `;
-
             roomList.appendChild(roomDiv);
           });
 
-          if (
-            Object.keys(rooms).length === 0 ||
-            roomList.children.length === 0
-          ) {
+          if (roomList.children.length === 0) {
             roomList.innerHTML = `
               <div class="empty-room-list">
                 <i class="fas fa-comments"></i>
@@ -1329,7 +1415,7 @@
       }
 
       // 방 생성
-      window.createRoom = async function () {
+      const createRoom = async () => {
         const roomName = document.getElementById("roomName").value.trim();
         const password = document.getElementById("roomPassword").value;
 
@@ -1338,55 +1424,33 @@
           return;
         }
 
-        const createBtn = document.querySelector(
-          "#createRoomForm .btn-primary"
-        );
-        createBtn.classList.add("room-creating");
+        const createBtn = document.getElementById("createRoomBtn");
+        createBtn.disabled = true;
         createBtn.innerHTML =
           '<i class="fas fa-spinner fa-spin"></i> 방 생성 중...';
 
         try {
-          const roomsRef = ref(database, "rooms");
-          const newRoomRef = push(roomsRef);
+          const newRoomRef = push(ref(database, "rooms"));
           currentRoom = newRoomRef.key;
 
-          const roomData = {
-            name: roomName,
-            created: serverTimestamp(),
-            users: {
-              [currentUser.id]: {
-                name: currentUser.name,
-                joined: serverTimestamp(),
-              },
-            },
-          };
-
-          if (password) {
-            roomData.password = password;
-          }
+          const roomData = { name: roomName, created: serverTimestamp() };
+          if (password) roomData.password = password;
 
           await set(newRoomRef, roomData);
-          showChatScreen();
+          await joinRoom(currentRoom, password, true);
         } catch (error) {
           console.error("방 생성 오류:", error);
-          showMessage(
-            "방 생성에 실패했습니다. Firebase 설정을 확인해주세요.",
-            "error",
-            "lobby"
-          );
+          showMessage("방 생성에 실패했습니다.", "error", "lobby");
         } finally {
-          createBtn.classList.remove("room-creating");
+          createBtn.disabled = false;
           createBtn.innerHTML =
             '<i class="fas fa-plus-circle"></i> 새 방 만들기';
         }
       };
 
       // 방 참여
-      async function joinRoom(roomId, password = null) {
-        if (!currentUser) {
-          showMessage("닉네임이 설정되지 않았습니다.", "error", "lobby");
-          return;
-        }
+      async function joinRoom(roomId, password = null, isCreating = false) {
+        if (!currentUser) return;
 
         try {
           const roomRef = ref(database, `rooms/${roomId}`);
@@ -1397,25 +1461,23 @@
                 showMessage("존재하지 않는 방입니다.", "error", "lobby");
                 return;
               }
-
               const room = snapshot.val();
-              if (room.password && room.password !== password) {
+              if (room.password && room.password !== password && !isCreating) {
                 showMessage("비밀번호가 틀렸습니다.", "error", "lobby");
                 hidePasswordForm();
                 return;
               }
 
               currentRoom = roomId;
-
               const userRef = ref(
                 database,
                 `rooms/${roomId}/users/${currentUser.id}`
               );
+              onDisconnect(userRef).remove();
               await set(userRef, {
                 name: currentUser.name,
                 joined: serverTimestamp(),
               });
-
               showChatScreen();
             },
             { onlyOnce: true }
@@ -1426,8 +1488,7 @@
         }
       }
 
-      // 비밀번호로 방 참여
-      window.joinWithPassword = function () {
+      const joinWithPassword = () => {
         const password = document.getElementById("joinPassword").value;
         if (!password) {
           showMessage("비밀번호를 입력해주세요.", "error", "lobby");
@@ -1436,7 +1497,6 @@
         joinRoom(selectedRoomId, password);
       };
 
-      // 채팅 화면 표시
       function showChatScreen() {
         document.getElementById("lobbyScreen").classList.add("hidden");
         document.getElementById("chatScreen").classList.remove("hidden");
@@ -1446,22 +1506,38 @@
         loadRoomInfo();
         loadMessages();
         loadUsers();
-
-        // 입력 필드 초기화
+        document.getElementById("messageInput").focus();
         document.getElementById("roomName").value = "";
         document.getElementById("roomPassword").value = "";
         document.getElementById("joinPassword").value = "";
+        lastMessageCount = 0;
       }
 
-      // 방 정보 로드
+      const leaveRoom = async (isKicked = false) => {
+        if (!currentRoom || !currentUser) return;
+        const userRef = ref(
+          database,
+          `rooms/${currentRoom}/users/${currentUser.id}`
+        );
+        await remove(userRef);
+        cleanupChatListeners();
+        currentRoom = null;
+        document.getElementById("chatScreen").classList.add("hidden");
+        document.getElementById("lobbyScreen").classList.remove("hidden");
+        document.getElementById("messagesContainer").innerHTML = "";
+        hidePasswordForm();
+        loadRooms();
+        if (isKicked)
+          showMessage("방이 삭제되어 로비로 이동했습니다.", "success", "lobby");
+      };
+
       function loadRoomInfo() {
         if (roomInfoListener) roomInfoListener();
         const roomRef = ref(database, `rooms/${currentRoom}`);
         roomInfoListener = onValue(roomRef, (snapshot) => {
-          const room = snapshot.val();
-          if (room) {
+          if (snapshot.val()) {
             document.getElementById("currentRoomName").textContent = escapeHtml(
-              room.name
+              snapshot.val().name
             );
           } else {
             leaveRoom(true);
@@ -1469,76 +1545,54 @@
         });
       }
 
-      // 사용자 목록 로드 (기존 10초 타이머 삭제)
       function loadUsers() {
         if (usersListener) usersListener();
         const usersRef = ref(database, `rooms/${currentRoom}/users`);
         usersListener = onValue(usersRef, (snapshot) => {
           const users = snapshot.val() || {};
           const userCount = Object.keys(users).length;
+          
+          // 사용자 수 업데이트
           document.getElementById(
             "onlineUsers"
           ).textContent = `접속자: ${userCount}명`;
+          
+          // 온라인 사용자 목록 업데이트
+          const usersList = document.getElementById("onlineUsersList");
+          usersList.innerHTML = "";
+          
+          Object.keys(users).forEach(userId => {
+            const user = users[userId];
+            const userTag = document.createElement("div");
+            userTag.className = `user-tag ${userId === currentUser.id ? 'current-user' : ''}`;
+            
+            userTag.innerHTML = `
+              <i class="fas fa-user"></i>
+              ${escapeHtml(user.name)}
+              ${userId === currentUser.id ? '(나)' : ''}
+            `;
+            
+            usersList.appendChild(userTag);
+          });
         });
       }
 
-      // 메시지 로드
       function loadMessages() {
         if (messagesListener) messagesListener();
         const messagesRef = ref(database, `rooms/${currentRoom}/messages`);
         messagesListener = onValue(messagesRef, (snapshot) => {
-          const messages = snapshot.val() || {};
-          displayMessages(messages);
+          displayMessages(snapshot.val() || {});
         });
       }
 
-      // 메시지 표시
-      function displayMessages(messages) {
-        const container = document.getElementById("messagesContainer");
-        container.innerHTML = "";
-
-        const messageArray = Object.values(messages).sort(
-          (a, b) => a.timestamp - b.timestamp
-        );
-
-        messageArray.forEach((message) => {
-          const messageDiv = document.createElement("div");
-          messageDiv.className = `message ${
-            message.userId === currentUser.id ? "own" : ""
-          }`;
-
-          const time = new Date(message.timestamp).toLocaleTimeString("ko-KR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-
-          messageDiv.innerHTML = `
-              <div class="message-info">
-                  <i class="fas fa-user"></i>
-                  ${
-                    message.userId === currentUser.id
-                      ? "나"
-                      : escapeHtml(message.username)
-                  } • ${time}
-              </div>
-              <div class="message-bubble">${escapeHtml(message.text)}</div>
-          `;
-
-          container.appendChild(messageDiv);
-        });
-        container.scrollTop = container.scrollHeight;
-      }
-
-      // HTML 이스케이프 (XSS 방지)
       function escapeHtml(text) {
         if (typeof text !== "string") return "";
         const div = document.createElement("div");
         div.textContent = text;
-        return div.innerHTML;
+        return div.innerHTML.replace(/\n/g, "<br>");
       }
 
-      // 메시지 전송
-      window.sendMessage = async function () {
+      window.sendMessage = async () => {
         const input = document.getElementById("messageInput");
         const message = input.value.trim();
         if (!message) return;
@@ -1556,6 +1610,7 @@
             timestamp: serverTimestamp(),
           });
           input.value = "";
+          input.focus();
           autoResize(input);
         } catch (error) {
           console.error("메시지 전송 오류:", error);
@@ -1565,103 +1620,170 @@
         }
       };
 
-      // 키 입력 처리
-      window.handleKeyDown = function (event) {
+      window.handleKeyDown = (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
           event.preventDefault();
           sendMessage();
         }
       };
 
-      // 텍스트에리어 자동 크기 조정
-      window.autoResize = function (textarea) {
+      window.autoResize = (textarea) => {
         textarea.style.height = "auto";
-        textarea.style.height = Math.min(textarea.scrollHeight, 120) + "px";
+        textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
       };
 
-      // 모든 채팅방 관련 리스너를 정리하는 함수
       function cleanupChatListeners() {
         if (roomInfoListener) roomInfoListener();
         if (messagesListener) messagesListener();
         if (usersListener) usersListener();
-        roomInfoListener = null;
-        messagesListener = null;
-        usersListener = null;
+        roomInfoListener = messagesListener = usersListener = null;
       }
 
-      // 방 나가기 (마지막 인원이면 방 전체 삭제 기능 추가)
-      window.leaveRoom = async function (silent = false) {
-        if (!currentUser || !currentRoom) return;
+      function getUserColorClass(userId) {
+        if (!userColorMap[userId]) {
+          const colors = [1, 2, 3, 4, 5, 6, 7, 8];
+          let hash = 0;
+          for (let i = 0; i < userId.length; i++) {
+            hash = userId.charCodeAt(i) + ((hash << 5) - hash);
+          }
+          userColorMap[userId] = `user-color-${
+            colors[Math.abs(hash % colors.length)]
+          }`;
+        }
+        return userColorMap[userId];
+      }
 
-        const roomRef = ref(database, `rooms/${currentRoom}`);
-        const usersRef = ref(database, `rooms/${currentRoom}/users`);
+      function startTitleFlash(newTitle) {
+        if (titleFlashInterval) return;
+        let isOriginal = true;
+        document.title = newTitle;
+        titleFlashInterval = setInterval(() => {
+          document.title = isOriginal ? newTitle : originalTitle;
+          isOriginal = !isOriginal;
+        }, 1000);
+      }
 
-        try {
-          // ★ 변경점: 나가기 전 인원수 확인
-          onValue(
-            usersRef,
-            async (snapshot) => {
-              if (snapshot.exists()) {
-                const userCount = Object.keys(snapshot.val()).length;
-                if (userCount === 1) {
-                  // 마지막 인원이면 방 전체를 삭제
-                  await remove(roomRef);
-                } else {
-                  // 아니면 본인만 삭제
-                  await remove(
-                    ref(
-                      database,
-                      `rooms/${currentRoom}/users/${currentUser.id}`
-                    )
-                  );
-                }
-              }
-            },
-            { onlyOnce: true }
-          );
-        } catch (error) {
-          console.error("방 나가기 오류:", error);
-        } finally {
-          cleanupChatListeners();
+      function stopTitleFlash() {
+        if (titleFlashInterval) {
+          clearInterval(titleFlashInterval);
+          titleFlashInterval = null;
+          document.title = originalTitle;
+        }
+      }
 
-          currentRoom = null;
-          selectedRoomId = null;
+      function displayMessages(messages) {
+        const container = document.getElementById("messagesContainer");
+        const messageKeys = Object.keys(messages);
 
-          document.getElementById("chatScreen").classList.add("hidden");
-          document.getElementById("lobbyScreen").classList.remove("hidden");
-          hidePasswordForm();
-          loadRooms();
+        const newMessagesCount = messageKeys.length;
+        if (lastMessageCount > 0 && newMessagesCount > lastMessageCount) {
+          const lastMessage = messages[messageKeys[newMessagesCount - 1]];
+          if (lastMessage.userId !== currentUser.id)
+            notifyNewMessage(lastMessage);
+        }
+        lastMessageCount = newMessagesCount;
 
-          if (!silent) {
-            showMessage("방에서 나왔습니다.", "success", "lobby");
+        container.innerHTML = "";
+
+        messageKeys
+          .sort((a, b) => messages[a].timestamp - messages[b].timestamp)
+          .forEach((key) => {
+            const msg = messages[key];
+            const msgDiv = document.createElement("div");
+            msgDiv.className = `message ${
+              msg.userId === currentUser.id ? "own" : ""
+            }`;
+            const colorClass =
+              msg.userId === currentUser.id
+                ? ""
+                : getUserColorClass(msg.userId);
+            const timeString = new Date(msg.timestamp).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            msgDiv.innerHTML = `
+              <div class="message-info">
+                <strong>${escapeHtml(msg.username)}</strong>
+                <span class="timestamp">${timeString}</span>
+              </div>
+              <div class="message-bubble ${colorClass}">${escapeHtml(
+              msg.text
+            )}</div>
+            `;
+            container.appendChild(msgDiv);
+          });
+
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function notifyNewMessage(message) {
+        if (!isWindowFocused) {
+          startTitleFlash(`💬 새 메시지! (${message.username})`);
+          if (
+            "Notification" in window &&
+            Notification.permission === "granted"
+          ) {
+            new Notification(message.username, {
+              body: message.text,
+              icon: "https://img.icons8.com/color/48/000000/chat--v1.png",
+            });
           }
         }
-      };
-
-      // 페이지 종료시 정리
-      window.addEventListener("beforeunload", () => {
-        if (currentUser && currentRoom) {
-          const userRef = ref(
-            database,
-            `rooms/${currentRoom}/users/${currentUser.id}`
+        const lastMsgEl = document.querySelector(
+          ".messages-container .message:last-child"
+        );
+        if (lastMsgEl) {
+          lastMsgEl.classList.add("new-message-highlight");
+          setTimeout(
+            () => lastMsgEl.classList.remove("new-message-highlight"),
+            1200
           );
-          remove(userRef);
         }
-      });
+      }
 
-      // Firebase 연결 확인
-      try {
-        const testRef = ref(database, ".info/connected");
-        onValue(testRef, (snapshot) => {
-          if (snapshot.val() === true) {
-            console.log("Firebase에 성공적으로 연결되었습니다.");
-          } else {
-            console.log("Firebase에 연결할 수 없습니다.");
-          }
+      // =================================================
+      // ★★★★★ 이벤트 리스너 연결 ★★★★★
+      // =================================================
+      document.addEventListener("DOMContentLoaded", () => {
+        // 로그인 화면
+        document
+          .getElementById("enterLobbyBtn")
+          .addEventListener("click", enterLobby);
+        document
+          .getElementById("username")
+          .addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              enterLobby();
+            }
+          });
+
+        // 로비 화면
+        document
+          .getElementById("createRoomBtn")
+          .addEventListener("click", createRoom);
+        document
+          .getElementById("joinWithPasswordBtn")
+          .addEventListener("click", joinWithPassword);
+        document
+          .getElementById("cancelJoinBtn")
+          .addEventListener("click", hidePasswordForm);
+
+        // 채팅 화면
+        document
+          .getElementById("leaveRoomBtn")
+          .addEventListener("click", () => leaveRoom(false));
+
+        // 창 포커스 이벤트
+        window.addEventListener("focus", () => {
+          isWindowFocused = true;
+          stopTitleFlash();
         });
-      } catch (error) {
-        console.log("Firebase 설정을 확인해주세요:", error.message);
-      }
+        window.addEventListener("blur", () => {
+          isWindowFocused = false;
+        });
+      });
     </script>
   </body>
 </html>
